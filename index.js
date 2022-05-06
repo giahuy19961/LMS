@@ -8,16 +8,6 @@ const route = require("./routes");
 const cors = require("cors");
 const { config } = require("dotenv");
 
-// const bcrypt = require("bcryptjs");
-
-// create connect my sql
-// const db = mysql.createConnection({
-//   host: "localhost",
-//   port: "3306",
-//   user: "root",
-//   password: "",
-//   database: "mysql",
-// });
 
 // connect
 db.connect((err) => {

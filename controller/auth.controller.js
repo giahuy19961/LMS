@@ -3,22 +3,26 @@ const db = require("../db/db.config");
 const jwt = require("jsonwebtoken");
 
 const loginUser = async (req, res) => {
-  const { username, password } = req.body;
+  // const { username, password } = req.body;
 
-  if (!username || !password)
+  if (!req.body.username || !req.body.password)
     return res
       .status(400)
       .json({ success: false, message: "Username and/or password is missing" });
   try {
     db.query(
-      `SELECT * FROM mdl_user WHERE username="${username}"`,
+      `SELECT * FROM mdl_user WHERE username="${req.body?.username}"`,
       function (error, results, fields) {
         if (!!error) {
+          console.log(error);
           return res
             .status(400)
             .json({ success: false, message: "User not found" });
         } else {
-          isValidPassword = bcrypt.compareSync(password, results[0].password);
+          isValidPassword = bcrypt.compareSync(
+            req.body?.password,
+            results[0].password
+          );
           if (!isValidPassword) {
             return res
               .status(401)

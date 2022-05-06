@@ -5,7 +5,7 @@ const db = mysql.createConnection({
   port: "3306",
   user: "root",
   password: "",
-  database: "mysql",
+  database: "moodle",
 });
 
 module.exports = db;
