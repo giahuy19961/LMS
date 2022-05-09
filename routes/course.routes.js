@@ -5,11 +5,13 @@ const {
   getCoursesCategories,
   getEnrollment,
   getCourseById,
+  enrollUser,
 } = require("../controller/course.controller");
 
 router.get("/", getCourses);
 router.get("/:id", getCourseById);
 router.get("/category", getCoursesCategories);
-router.get("/enrol", getEnrollment);
+router.get("/enrol/:id", getEnrollment);
+router.post("/enrol", enrollUser);
 
 module.exports = router;
