@@ -92,12 +92,10 @@ const getEnrollment = async (req, res) => {
                   )})`,
                   (error, results, fields) => {
                     if (!!error) {
-                      return res
-                        .status(500)
-                        .json({
-                          success: false,
-                          message: "Internal Server Error",
-                        });
+                      return res.status(500).json({
+                        success: false,
+                        message: "Internal Server Error",
+                      });
                     } else {
                       return res
                         .status(200)
@@ -146,8 +144,6 @@ const enrollUser = async (req, res) => {
     }
   );
 };
-
-const getUserEnrolment = (req, res) => {};
 
 module.exports = {
   getCourses,
