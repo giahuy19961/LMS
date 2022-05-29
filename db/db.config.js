@@ -1,10 +1,10 @@
 const mysql = require("mysql");
 
 const db = mysql.createConnection({
-  host: "localhost",
-  port: "3306",
+  host: "mariadb-79442-0.cloudclusters.net",
+  port: "19046",
   user: "root",
-  password: "",
+  password: "@12071996Gh",
   database: "moodle",
 });
 
