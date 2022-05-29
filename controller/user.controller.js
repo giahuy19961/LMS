@@ -2,6 +2,7 @@ const db = require("../db/db.config");
 const _ = require("lodash");
 const jwt_decode = require("jwt-decode");
 const { INTERNAL_ERROR } = require("../constants/error");
+const sendMail = require("../helper/sendMail");
 
 const editUser = async (req, res) => {
   const { body } = req;
@@ -110,7 +111,24 @@ const listStudents = async (req, res) => {
                 (user) => !_.includes(listNotStudents, user?.id)
               );
 
-              return res.status(200).json({ success: true, message: students });
+              let studentsData = _.map(students, (student) => ({
+                id: student?.id,
+                firstname: student?.firstname,
+                lastname: student?.lastname,
+                username: student?.username,
+                city: student?.city,
+                country: student?.country,
+                address: student?.address,
+                email: student?.email,
+                phone1: student?.phone1,
+                created: student?.timecreated,
+                updated: student?.timemodified,
+                suspended: student?.suspended,
+              }));
+
+              return res
+                .status(200)
+                .json({ success: true, data: studentsData });
             }
           );
         }
@@ -150,9 +168,59 @@ const listTeachers = async (req, res) => {
                 _.includes(listIdTeachers, user?.id)
               );
 
-              return res.status(200).json({ success: true, message: teachers });
+              let teachersData = _.map(teachers, (teacher) => ({
+                id: teacher?.id,
+                firstname: teacher?.firstname,
+                lastname: teacher?.lastname,
+                username: teacher?.username,
+                city: teacher?.city,
+                country: teacher?.country,
+                address: teacher?.address,
+                email: teacher?.email,
+                phone1: teacher?.phone1,
+                created: teacher?.timecreated,
+                updated: teacher?.timemodified,
+                suspended: teacher?.suspended,
+              }));
+
+              return res
+                .status(200)
+                .json({ success: true, data: teachersData });
             }
           );
+        }
+      }
+    );
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+};
+
+const unlockUser = async (req, res) => {
+  try {
+    db.query(
+      `UPDATE mdl_user SET suspended = "${req?.body?.status}" WHERE mdl_user.id = "${req?.body?.id}"`,
+      (error, results, fields) => {
+        if (!!error) {
+          return res
+            .status(500)
+            .json({ success: false, message: INTERNAL_ERROR });
+        } else {
+          if (req.body.email) {
+            sendMail(
+              req?.body?.email,
+              `${
+                req.body.status === 1
+                  ? "Tài khoản Cyberlearning của bạn đã bị khóa"
+                  : "Tài khoản Cyberlearning của bạn đã được kích hoạt"
+              }`
+            );
+            return res
+              .status(200)
+              .json({ success: true, message: "Update successfully!" });
+          }
         }
       }
     );
@@ -168,4 +236,5 @@ module.exports = {
   userInfo,
   listStudents,
   listTeachers,
+  unlockUser,
 };

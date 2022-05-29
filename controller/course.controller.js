@@ -13,7 +13,8 @@ const getCourses = async (req, res) => {
             .status(400)
             .json({ success: false, message: "No course found" });
         } else {
-          res.status(200).json({ success: true, data: results });
+          let courseData = _.filter(results, (result) => result.id !== 1);
+          res.status(200).json({ success: true, data: courseData });
         }
       }
     );
